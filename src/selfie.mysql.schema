@@ -1,0 +1,54 @@
+CREATE DATABASE selfie;
+
+CREATE TABLE Sessions (
+	Id VARCHAR(64) NOT NULL,
+	StartUtc DATETIME,
+	Duration INT(11),
+	Dir SMALLINT,
+	Established TINYINT,
+   RendServer INT UNSIGNED NOT NULL,
+	SrcUri VARCHAR(250),
+	DstUri VARCHAR(250),
+	Status VARCHAR(250),
+   TxBw INT(11),
+   RxBw INT(11),
+
+	CONSTRAINT pk_id PRIMARY KEY (Id)
+) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE Session_Medias (
+	SessionId VARCHAR(64) NOT NULL,
+	Raddr VARCHAR(250),
+	Rport INT(11),
+	Enabled TINYINT,
+	Type VARCHAR(80) NOT NULL,
+	TxPkt INT(11),
+	TxLost INT(11),
+	TxJitter INT(11),
+	RxPkt INT(11),
+	RxLost INT(11),
+	RxJitter INT(11),
+
+	FOREIGN KEY (SessionId) REFERENCES Sessions(Id),
+	CONSTRAINT pk_session_raddr_rport PRIMARY KEY (SessionId, Raddr, Rport)
+) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE Rend_Servers (
+   IpAddr INT UNSIGNED NOT NULL,
+   Hostname VARCHAR(250),
+
+	CONSTRAINT pk_ipaddr PRIMARY KEY (IpAddr)
+) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE Selfie_Hosts (
+   RendServerIp INT UNSIGNED NOT NULL,
+   Host VARCHAR(250) NOT NULL,
+   SipAddr VARCHAR(250) NOT NULL,
+	Tag VARCHAR(80) NOT NULL,
+
+	CONSTRAINT pk_selfie_host_rendserverip_host PRIMARY KEY (RendServerIp, Host),
+	FOREIGN KEY (RendServerIp) REFERENCES Rend_Servers(IpAddr)
+) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+ALTER TABLE Sessions ADD DstTag VARCHAR(250) default "" after DstUri;
+ALTER TABLE Sessions MODIFY COLUMN Status VARCHAR(80) DEFAULT '';

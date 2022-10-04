@@ -1,0 +1,14 @@
+[Unit]
+Description=Myselfie Rendezvous Data Collector
+After=network.target
+After=mysql.service
+
+[Service]
+Type=simple 
+User=nocadmin
+Group=nocadmin
+PIDFile=/var/run/mnsnoc-selfie-daemon.pid
+ExecStart=/var/www/go/src/mns/selfie/trunk/selfie
+
+[Install]
+WantedBy=multi-user.target

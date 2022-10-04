@@ -1,0 +1,4 @@
+DEPLOY_TYPE=dev
+SELFIE_DB_USER=nocadmin
+SELFIE_DB_PASSWD=Syltetoy345
+SELFIE_DB_HOST=localhost
